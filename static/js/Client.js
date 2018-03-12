@@ -3,7 +3,7 @@
   'use strict';
 
   var Config = {
-      URL: 'http://localhost:8090'
+      URL: 'http://192.168.1.193:8090'
     };
   var keyMap = {
     8: [
@@ -399,21 +399,28 @@
 
   Client.prototype.connect = function (config) {
     this._socket = io.connect(Config.URL, { 'force new connection': true });
+     //console.log("isConnected", this._socket.connected);
     this._socket.emit('init', {
       host: config.host,
       port: config.port,
       password: config.password
     });
+
+    this._socket.on('connect_error', (error) => {
+      console.log(error)
+    });
     return this._addHandlers();
   };
+
 
   Client.prototype._addHandlers = function () {
     var self = this;
     return new Promise(function (resolve, reject) {
       var timeout = setTimeout(function () {
-        reject();
+        reject(`Time out in Client._addHandlers`);
       }, 2000);
       self._socket.on('init', function (config) {
+        console.info('Client.js:424 ');
         var canvas = self._screen.getCanvas();
         canvas.width = config.width;
         canvas.height = config.height;

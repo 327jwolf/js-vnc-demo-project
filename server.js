@@ -1,8 +1,8 @@
 'use strict';
 
-var RFB = require('rfb');
+var RFB = require('rfb2');
 var io = require('socket.io');
-var Png = require('./node_modules/node-png/build/Release/png').Png;
+var Png = require('node-png').Png;
 var express = require('express');
 var http = require('http');
 var clients = [];
@@ -61,6 +61,7 @@ function addEventHandlers(r, socket) {
   });
 
   r.on('raw', function (rect) {
+    console.log(`logging rect: ${rect}`)
     if (!initialized) {
       handleConnection(rect.width, rect.height);
     }
@@ -88,14 +89,32 @@ function addEventHandlers(r, socket) {
 function createRfbConnection(config, socket) {
   var r;
   try {
-    r = RFB({
+    r = RFB.createConnection({
       host: config.host,
       port: config.port,
       password: config.password,
       securityType: 'vnc',
     });
+    console.log('Server.js:98',config.host);
     setTimeout(function () {
-      r.requestRedraw();
+      //r.requestRedraw();
+      r.on('rect', function(rect) {
+        console.log(rect)
+         switch(rect.encoding) {
+         case rfb.encodings.raw:
+            rect.x, rect.y, rect.width, rect.height, rect.data
+            //pixmap format is in r.bpp, r.depth, r.redMask, greenMask, blueMask, redShift, greenShift, blueShift
+            break;
+         case rfb.encodings.copyRect:
+            pseudo-rectangle
+            //copy rectangle from rect.src.x, rect.src.y, rect.width, rect.height, to rect.x, rect.y
+            break;
+         case rfb.encodings.hextile:
+            // not fully implemented
+            rect.on('tile', handleHextileTile); // emitted for each subtile
+            break;
+         }
+        });
     }, 200);
   } catch (e) {
     console.log(e);
