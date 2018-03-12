@@ -399,7 +399,7 @@
 
   Client.prototype.connect = function (config) {
     this._socket = io.connect(Config.URL, { 'force new connection': true });
-     //console.log("isConnected", this._socket.connected);
+     //console.log("isConnected", this._socket.connected, Config.URL);
     this._socket.emit('init', {
       host: config.host,
       port: config.port,
