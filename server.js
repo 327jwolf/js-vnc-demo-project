@@ -148,6 +148,7 @@ function disconnectClient(socket) {
   io.sockets.on('connection', function (socket) {
     console.info('Client connected');
     socket.on('init', function (config) {
+      console.info('Server.js:150   ', config);
       var r = createRfbConnection(config, socket);
       socket.on('mouse', function (evnt) {
         r.sendPointer(evnt.x, evnt.y, evnt.button);

@@ -3,7 +3,7 @@
   'use strict';
 
   var Config = {
-      URL: 'http://192.168.1.193:8090'
+      URL: sLocation
     };
   var keyMap = {
     8: [
