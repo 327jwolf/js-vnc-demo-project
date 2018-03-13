@@ -14,9 +14,9 @@
     var screen = new Screen(canvas);
     client = new Client(screen);
     client.connect({
-      host: document.getElementById('host').value || "192.168.1.122", // 24.119.145.154
-      port: parseInt(document.getElementById('port').value, 10) || 5900, // 8307 
-      password: document.getElementById('password').value || "h@rl3y01" // "oasis12"
+      host: document.getElementById('host').value,
+      port: parseInt(document.getElementById('port').value, 10),
+      password: document.getElementById('password').value
     })
     .then(function () {
       document.getElementById('form-wrapper').style.display = 'none';

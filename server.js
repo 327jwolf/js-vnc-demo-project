@@ -146,7 +146,7 @@ function disconnectClient(socket) {
 
   io = io.listen(server, { log: false });
   io.sockets.on('connection', function (socket) {
-    console.info('Client connected');
+    console.info('Client connected', socket.conn.id);
     socket.on('init', function (config) {
       console.info('Server.js:150   ', config);
       var r = createRfbConnection(config, socket);

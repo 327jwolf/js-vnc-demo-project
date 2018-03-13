@@ -1,7 +1,7 @@
 /* global io */
 (function (w) {
   'use strict';
-
+  var sLocation = `${location.protocol}//${location.host}`
   var Config = {
       URL: sLocation
     };
@@ -398,14 +398,13 @@
   };
 
   Client.prototype.connect = function (config) {
-    this._socket = io.connect(Config.URL, { 'force new connection': true });
+    this._socket = io.connect(Config.URL, { 'force new connection': true }); // 
      //console.log("isConnected", this._socket.connected, Config.URL);
     this._socket.emit('init', {
       host: config.host,
       port: config.port,
       password: config.password
     });
-
     this._socket.on('connect_error', (error) => {
       console.log(error)
     });
@@ -415,19 +414,21 @@
 
   Client.prototype._addHandlers = function () {
     var self = this;
+
     return new Promise(function (resolve, reject) {
       var timeout = setTimeout(function () {
-        reject(`Time out in Client._addHandlers`);
+        reject(Error(`Time out in Client._addHandlers`));
       }, 2000);
       self._socket.on('init', function (config) {
-        console.info('Client.js:424 ');
+        console.info('Client.js:424 ',config);
         var canvas = self._screen.getCanvas();
         canvas.width = config.width;
         canvas.height = config.height;
         self._scaleScreen(config);
         self._initEventListeners();
-        resolve();
+        
         clearTimeout(timeout);
+        resolve();
       });
       self._socket.on('frame', function (frame) {
         self._screen.drawRect(frame);
